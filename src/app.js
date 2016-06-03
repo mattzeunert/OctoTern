@@ -2,6 +2,8 @@ var $ = require("jquery")
 var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
+const DEBUG = true;
+
 init()
 
 function init(){
@@ -15,13 +17,17 @@ function init(){
 }
 
 function processCodeOnPage(){
-    console.time("OctoTern")
+    time("OctoTern")
 
+    time("OctoTern Init GithubCodeBlock")
     var codeBlock = new GithubCodeBlock($(".blob-wrapper").first(0))
-    var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
-        window.ternLinks = ternLinks
-        window.codeBlock = codeBlock
+    timeEnd("OctoTern Init GithubCodeBlock")
 
+    time("OctoTern getLinksFromTern")
+    var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
+        timeEnd("OctoTern getLinksFromTern")
+
+        time("OctoTern Display links")
         ternLinks.map(function(link){
             codeBlock.enforceCleanDomSplitBetween(link.fromStart, link.fromEnd)
             codeBlock.enforceCleanDomSplitBetween(link.toStart, link.toEnd)
@@ -58,6 +64,16 @@ function processCodeOnPage(){
             }
         })
 
-        console.timeEnd("OctoTern")
+        timeEnd("OctoTern Display links")
+        timeEnd("OctoTern")
     })
+}
+
+function time(label){
+    if (!DEBUG) return
+    console.time(label)
+}
+function timeEnd(label){
+    if (!DEBUG) return
+    console.timeEnd(label)
 }
