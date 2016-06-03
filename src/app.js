@@ -13,9 +13,9 @@ function init(){
         ".octo-tern-link {background: lime; cursor: pointer } " +
         ".octo-tern-link:hover {text-decoration: underline} " +
     "</style>")
-    processCodeOnPage();
+    processCodeOnPage()
 }
-
+window.processCodeOnPage = processCodeOnPage
 function processCodeOnPage(){
     time("OctoTern")
     console.profile()
@@ -25,11 +25,11 @@ function processCodeOnPage(){
     timeEnd("OctoTern Init GithubCodeBlock")
 
     time("OctoTern getLinksFromTern")
-    var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
+    var ternLinks = getLinksFromTern(codeBlock.getCode(), function processTernLinks(ternLinks){
         timeEnd("OctoTern getLinksFromTern")
 
         time("OctoTern Display links")
-        ternLinks.map(function(link){
+        ternLinks.map(function processTernLink(link){
             codeBlock.enforceCleanDomSplitBetween(link.fromStart, link.fromEnd)
             codeBlock.enforceCleanDomSplitBetween(link.toStart, link.toEnd)
 
@@ -44,7 +44,7 @@ function processCodeOnPage(){
             if (link.isDeclaration) {
                 declarationElements.addClass("octo-tern-definition")
             } else {
-                fromCodeParts.forEach(function(codePart){
+                fromCodeParts.forEach(function linkifyCodePart(codePart){
                     $(codePart.el).addClass("octo-tern-link")
 
                     $(codePart.el).click(function(){

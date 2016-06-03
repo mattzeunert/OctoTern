@@ -6,7 +6,7 @@ module.exports = function(code, callback){
     var srv = new tern.Server({});
     var identifierPositions = []
     srv.on("postInfer", function(ast, scope){
-        findIdentifierPositions(srv, ast, scope, function(identifierPositions){
+        findIdentifierPositions(srv, ast, scope, function handleIdentifierPositions(identifierPositions){
             getLinksFromPositions(srv, identifierPositions, callback)
         });
     })
@@ -39,25 +39,16 @@ function getLinksFromPositions(srv, positions, callback){
         return;
     }
 
-    positions.forEach(function(position){
-        getLinksTo(position, function(links){
+    positions.forEach(function processIdentifierPosition(position){
+        getLinksTo(position, function storeRetrievedLinks(links){
             allLinks = allLinks.concat(links)
-            continuu()
-        })
 
-        function continuu(){
             numberOfPositionsLinksHaveBeenRetrievedFor++
             if (numberOfPositionsLinksHaveBeenRetrievedFor == positions.length){
                 callback(allLinks)
             }
-        }
-    })
-
-    function linkExistsAt(position){
-        return allLinks.some(function(link){
-            return link.fromStart === position.start && link.fromEnd === position.end;
         })
-    }
+    })
 
     function getLinksTo(position, callback){
         var doc = {
@@ -67,7 +58,7 @@ function getLinksFromPositions(srv, positions, callback){
                 end: position.end
             }
         }
-        srv.request(doc, function(error, response){
+        srv.request(doc, function onTernRequestResponse(error, response){
             var links = [];
             if (!error && response.start !== undefined){
                 var isDeclaration = position.start === response.start &&

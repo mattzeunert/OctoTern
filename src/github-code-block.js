@@ -52,8 +52,18 @@ GithubCodeBlock.prototype.enforceCleanDomSplitAt = function(index){
 
 }
 GithubCodeBlock.prototype.getCodePartAt = function(index){
-    for (var i=0; i<this._sortedCodeParts.length; i++) {
-        var codePart = this._sortedCodeParts[i];
+    var firstItemIndex = _.sortedIndex(this._sortedCodeParts, index, function(objOrIndex){
+        if(typeof objOrIndex === "number"){
+             return objOrIndex
+        } else {
+            return objOrIndex.start
+        }
+    })
+
+    var codeParts = this._sortedCodeParts.slice(firstItemIndex - 1, this._sortedCodeParts.length)
+
+    for (var i=0; i<codeParts.length; i++) {
+        var codePart = codeParts[i];
         if (codePart.start <= index && codePart.end > index){
             return codePart
         }
@@ -85,7 +95,21 @@ GithubCodeBlock.prototype.replaceCodePart = function(codePartToReplace, replacem
     this._sortedCodeParts = before.concat(replacements).concat(after);
 }
 GithubCodeBlock.prototype.getCodePartsBetween = function(startPos, endPos){
-    return this._sortedCodeParts.filter(function(codePart){
+    var firstItemIndex = _.sortedIndex(this._sortedCodeParts, startPos, function(objOrIndex){
+        if(typeof objOrIndex === "number"){
+             return objOrIndex
+        } else {
+            return objOrIndex.start
+        }
+    })
+    var lastItemIndex = _.sortedIndex(this._sortedCodeParts, endPos, function(objOrIndex){
+        if(typeof objOrIndex === "number"){
+             return objOrIndex
+        } else {
+            return objOrIndex.end
+        }
+    })
+    return this._sortedCodeParts.slice(firstItemIndex, lastItemIndex + 1).filter(function(codePart){
         return codePart.end > startPos
             &&
             codePart.start < endPos
