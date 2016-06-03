@@ -5,23 +5,56 @@ var estraverse = require("estraverse")
 module.exports = function(code, callback){
     var srv = new tern.Server({});
     var identifierPositions = []
-    srv.on("postInfer", function(ast){
-        estraverse.traverse(ast, {
-            enter: function (node, parent) {
-                if (node.type === "Identifier" && parent.type==="VariableDeclarator") {
-                    identifierPositions.push({
-                        start: node.start,
-                        end: node.end
-                    })
-                }
-            }
+    srv.on("postInfer", function(ast, scope){
+        findIdentifierPositions(srv, ast, scope, function(identifierPositions){
+            getLinksFromPositions(srv, identifierPositions, callback)
         });
-        console.log("identifierPositions", identifierPositions)
-        getLinksFromPositions(srv, identifierPositions, callback)
     })
 
     srv.addFile("test.js", code)
     srv.flush(function(){});
+}
+
+function findIdentifierPositions(srv, ast, scope, callback){
+    // VARIABLES ONLY
+    var identifierPositions = [];
+    estraverse.traverse(ast, {
+        enter: function (node, parent) {
+            if (node.type === "Identifier" && parent.type==="VariableDeclarator") {
+                identifierPositions.push({
+                    start: node.start,
+                    end: node.end
+                })
+            }
+        }
+    });
+    callback(identifierPositions)
+
+    // BRUTE FORCE
+    // var code = srv.files[0].text;
+    // var charsFetched = 0;
+    // var identifierPositions = []
+    // for (let i = 0; i < code.length; i++) {
+    //     srv.request({
+    //         query: {
+    //             type: "refs",
+    //             file: "test.js",
+    //             end: i
+    //         }
+    //     }, function(error, response){
+    //         charsFetched++;
+    //         if (response && response.refs.length > 0) {
+    //             identifierPositions.push({
+    //                 start: response.refs[0].start,
+    //                 end: response.refs[0].end
+    //             })
+    //         }
+    //         if (charsFetched === code.length){
+    //             callback(identifierPositions)
+    //         }
+    //     })
+    // }
+
 }
 
 function getLinksFromPositions(srv, positions, callback){
@@ -53,14 +86,18 @@ function getLinksFromPositions(srv, positions, callback){
             }
         }
         srv.request(doc, function(error, response){
-            var links = response.refs.map(function(ref){
-                return {
-                    toStart: position.start,
-                    toEnd: position.end,
-                    fromStart: ref.start,
-                    fromEnd: ref.end
-                }
-            })
+
+            var links = [];
+            if (!error){
+                links = response.refs.map(function(ref){
+                    return {
+                        toStart: position.start,
+                        toEnd: position.end,
+                        fromStart: ref.start,
+                        fromEnd: ref.end
+                    }
+                })
+            }
             callback(links)
         })
     }

@@ -2,6 +2,11 @@ var $ = require("jquery")
 var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
+$("body").append("<style>" +
+    ".octo-tern-link { cursor: pointer } " +
+    ".octo-tern-link:hover {text-decoration: underline} " +
+"</style>")
+
 console.time("OctoTern")
 var codeBlock = new GithubCodeBlock($(".blob-wrapper").first(0))
 var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
@@ -17,16 +22,15 @@ var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
 
 
         fromCodeParts.forEach(function(codePart){
-            $(codePart.el).css("border", "1px solid green")
-
             if (codePart.el !== null && codePart.el.nodeName === "#text"){
                 var newEl = $("<span>" + codePart.el.textContent + "</span>")
-                newEl.attr("debug-start", codePart.start)
-                newEl.attr("debug-end", codePart.end)
+                // newEl.attr("debug-start", codePart.start)
+                // newEl.attr("debug-end", codePart.end)
                 $(codePart.el).replaceWith(newEl)
                 codePart.el = newEl;
-                $(codePart.el).css("border", "1px solid lime")
             }
+
+            $(codePart.el).addClass("octo-tern-link")
 
             $(codePart.el).click(function(){
                 console.log("toCodeParts", toCodeParts, "link", link)

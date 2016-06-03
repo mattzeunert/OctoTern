@@ -124,9 +124,8 @@ function getCodeParts(containerEl){
         codePart.start = pos;
         pos += codePart.content.length;
         codePart.end = pos;
-        $(codePart.el).attr("debug-start", codePart.start)
-        $(codePart.el).attr("debug-end", codePart.end)
-        $(codePart.el).css("border", "1px solid red")
+        // $(codePart.el).attr("debug-start", codePart.start)
+        // $(codePart.el).attr("debug-end", codePart.end)
     })
 
     return codeParts
