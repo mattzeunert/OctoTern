@@ -52,17 +52,13 @@ GithubCodeBlock.prototype.enforceCleanDomSplitAt = function(index){
 
 }
 GithubCodeBlock.prototype.getCodePartAt = function(index){
-    var codeParts =  this._sortedCodeParts.filter(function(codePart){
-        return codePart.start <= index
-            &&
-            codePart.end > index
-    })
-
-    if (codeParts.length !== 1) {
-        throw "Hmm... not sure this is supposed to happen"
+    for (var i=0; i<this._sortedCodeParts.length; i++) {
+        var codePart = this._sortedCodeParts[i];
+        if (codePart.start <= index && codePart.end > index){
+            return codePart
+        }
     }
-
-    return codeParts[0]
+    throw Error("Codepart not found")
 }
 GithubCodeBlock.prototype.enforceCodePartsUseElementNodes = function(codeParts){
     codeParts.forEach((codePart) => {
