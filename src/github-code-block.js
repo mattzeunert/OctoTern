@@ -64,7 +64,20 @@ GithubCodeBlock.prototype.getCodePartAt = function(index){
 
     return codeParts[0]
 }
-// enforceCleanDomSplitAt
+GithubCodeBlock.prototype.enforceCodePartsUseElementNodes = function(codeParts){
+    codeParts.forEach((codePart) => {
+        this.enforceCodePartUsesElementNode(codePart)
+    })
+}
+GithubCodeBlock.prototype.enforceCodePartUsesElementNode = function(codePart) {
+    if (codePart.el.nodeName === "#text"){
+        var newEl = $("<span>" + codePart.el.textContent + "</span>")
+        // newEl.attr("debug-start", codePart.start)
+        // newEl.attr("debug-end", codePart.end)
+        $(codePart.el).replaceWith(newEl)
+        codePart.el = newEl[0];
+    }
+}
 GithubCodeBlock.prototype._sort = function(){
     this._sortedCodeParts = _.sortBy(this._sortedCodeParts, function(codePart){
         return codePart.start

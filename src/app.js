@@ -3,6 +3,8 @@ var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
 $("body").append("<style>" +
+    ".octo-tern-definition { transition: 1s background }" +
+    ".octo-tern-definition-selected { background: yellow}" +
     ".octo-tern-link { cursor: pointer } " +
     ".octo-tern-link:hover {text-decoration: underline} " +
 "</style>")
@@ -20,30 +22,33 @@ var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
         var fromCodeParts = codeBlock.getCodePartsBetween(link.fromStart, link.fromEnd)
         var toCodeParts = codeBlock.getCodePartsBetween(link.toStart, link.toEnd)
 
+        codeBlock.enforceCodePartsUseElementNodes(fromCodeParts)
+        codeBlock.enforceCodePartsUseElementNodes(toCodeParts)
 
-        fromCodeParts.forEach(function(codePart){
-            if (codePart.el !== null && codePart.el.nodeName === "#text"){
-                var newEl = $("<span>" + codePart.el.textContent + "</span>")
-                // newEl.attr("debug-start", codePart.start)
-                // newEl.attr("debug-end", codePart.end)
-                $(codePart.el).replaceWith(newEl)
-                codePart.el = newEl;
-            }
+        var declarationElements = $(toCodeParts.map((codePart) => codePart.el));
 
-            $(codePart.el).addClass("octo-tern-link")
+        if (link.isDeclaration) {
+            declarationElements.addClass("octo-tern-definition")
+        } else {
+            fromCodeParts.forEach(function(codePart){
+                $(codePart.el).addClass("octo-tern-link")
 
-            $(codePart.el).click(function(){
-                console.log("toCodeParts", toCodeParts, "link", link)
-                var firstToCodePart = toCodeParts[0]
-                // Don't go to el directly because it could be a
-                // text DOM node where .offset won't work
-                var lineEl = $(firstToCodePart.el).parents(".js-file-line")
+                $(codePart.el).click(function(){
+                    console.log("toCodeParts", toCodeParts, "link", link)
+                    var firstToCodePart = toCodeParts[0]
 
-                document.body.scrollTop = lineEl.offset().top
+                    declarationElements.addClass("octo-tern-definition-selected")
+                    setTimeout(function(){
+                        declarationElements.removeClass("octo-tern-definition-selected")
+                    }, 1000)
+
+                    var heightOfTwoLines = 18 * 2;
+                    document.body.scrollTop = $(firstToCodePart.el).offset().top - heightOfTwoLines
+                })
             })
-        })
-        console.timeEnd("OctoTern")
+        }
     })
 
+    console.timeEnd("OctoTern")
     console.log(ternLinks)
 })

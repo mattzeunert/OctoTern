@@ -89,13 +89,16 @@ function getLinksFromPositions(srv, positions, callback){
 
             var links = [];
             if (!error){
-                links = response.refs.map(function(ref){
-                    return {
+                response.refs.forEach(function(ref){
+                    var isDeclaration = position.start === ref.start &&
+                        position.end === ref.end;
+                    links.push({
+                        isDeclaration: isDeclaration,
                         toStart: position.start,
                         toEnd: position.end,
                         fromStart: ref.start,
                         fromEnd: ref.end
-                    }
+                    });
                 })
             }
             callback(links)
