@@ -18,6 +18,7 @@ function init(){
 
 function processCodeOnPage(){
     time("OctoTern")
+    console.profile()
 
     time("OctoTern Init GithubCodeBlock")
     var codeBlock = new GithubCodeBlock($(".blob-wrapper").first(0))
@@ -66,6 +67,8 @@ function processCodeOnPage(){
 
         timeEnd("OctoTern Display links")
         timeEnd("OctoTern")
+
+        console.profileEnd()
     })
 }
 

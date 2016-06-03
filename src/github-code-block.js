@@ -81,17 +81,12 @@ GithubCodeBlock.prototype.enforceCodePartUsesElementNode = function(codePart) {
         codePart.el = newEl[0];
     }
 }
-GithubCodeBlock.prototype._sort = function(){
-    this._sortedCodeParts = _.sortBy(this._sortedCodeParts, function(codePart){
-        return codePart.start
-    })
-}
 GithubCodeBlock.prototype.replaceCodePart = function(codePartToReplace, replacements){
-    this._sortedCodeParts = _.reject(this._sortedCodeParts, function(codePart){
-        return codePart === codePartToReplace
-    })
-    this._sortedCodeParts = this._sortedCodeParts.concat(replacements)
-    this._sort();
+    var codePartToReplaceIndex = this._sortedCodeParts.indexOf(codePartToReplace);
+    var before = this._sortedCodeParts.slice(0, codePartToReplaceIndex);
+    var after = this._sortedCodeParts.slice(codePartToReplaceIndex + 1);
+
+    this._sortedCodeParts = before.concat(replacements).concat(after);
 }
 GithubCodeBlock.prototype.getCodePartsBetween = function(startPos, endPos){
     return this._sortedCodeParts.filter(function(codePart){
