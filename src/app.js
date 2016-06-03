@@ -1,9 +1,9 @@
 var $ = require("jquery")
-var readCodeBlock = require("./read-code-block")
+var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
-var codeBlock = readCodeBlock($(".blob-wrapper").first(0))
-var ternLinks = getLinksFromTern(codeBlock.code, function(ternLinks){
+var codeBlock = new GithubCodeBlock($(".blob-wrapper").first(0))
+var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
     window.ternLinks = ternLinks
     window.codeBlock = codeBlock
 
@@ -18,6 +18,8 @@ var ternLinks = getLinksFromTern(codeBlock.code, function(ternLinks){
 
             if (codePart.el !== null && codePart.el.nodeName === "#text"){
                 var newEl = $("<span>" + codePart.el.textContent + "</span>")
+                newEl.attr("debug-start", codePart.start)
+                newEl.attr("debug-end", codePart.end)
                 $(codePart.el).replaceWith(newEl)
                 codePart.el = newEl;
                 $(codePart.el).css("border", "1px solid lime")

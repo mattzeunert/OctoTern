@@ -1,5 +1,28 @@
 var $ = require("jquery")
 
+function GithubCodeBlock(el){
+    this.el = el
+    this.codeParts = getCodeParts(el);
+}
+GithubCodeBlock.prototype.getCode = function(){
+    var code = "";
+    this.codeParts.forEach(function(codePart){
+        code += codePart.content
+    })
+    return code;
+}
+GithubCodeBlock.prototype.getCodePartsBetween = function(startPos, endPos){
+    var codeParts = this.codeParts;
+    return getExistingCodeParts(startPos, endPos)
+    function getExistingCodeParts(startPos, endPos){
+        return codeParts.filter(function(codePart){
+            return codePart.end >= startPos
+                &&
+                codePart.start <= endPos
+        })
+    }
+}
+
 function getCodeParts(containerEl){
     var lineElements = $(containerEl).find(".js-file-line");
 
@@ -36,37 +59,13 @@ function getCodeParts(containerEl){
         codePart.start = pos;
         pos += codePart.content.length;
         codePart.end = pos;
+        $(codePart.el).attr("debug-start", codePart.start)
+        $(codePart.el).attr("debug-end", codePart.end)
         $(codePart.el).css("border", "1px solid red")
     })
 
     return codeParts
 }
 
-function getCodeFromCodeParts(codeParts){
-    var code = "";
-    codeParts.forEach(function(codePart){
-        code += codePart.content
-    })
-    return code;
-}
 
-function getCodePartsBetween(codeParts, startPos, endPos){
-    return codeParts.filter(function(codePart){
-        return codePart.end >= startPos
-            &&
-            codePart.start <= endPos
-    })
-}
-
-function readCodeBlock(el){
-    var codeParts = getCodeParts(el);
-    return {
-        codeParts: codeParts,
-        code: getCodeFromCodeParts(codeParts),
-        getCodePartsBetween: function(startPos, endPos){
-            return getCodePartsBetween(codeParts, startPos, endPos)
-        }
-    }
-}
-
-module.exports = readCodeBlock
+module.exports = GithubCodeBlock
