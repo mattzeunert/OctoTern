@@ -8,20 +8,29 @@ var ternLinks = getLinksFromTern(codeBlock.code, function(ternLinks){
     window.codeBlock = codeBlock
 
     ternLinks.map(function(link){
-        var fromCodeParts = codeBlock.codeParts.filter(function(codePart){
-            return codePart.start === link.fromStart
-        })
-        var toCodeParts = codeBlock.codeParts.filter(function(codePart){
-            return codePart.start === link.toStart
-        })
+        var fromCodeParts = codeBlock.getCodePartsBetween(link.fromStart, link.fromEnd)
+        console.log("fromCodeParts", fromCodeParts)
+        var toCodeParts = codeBlock.getCodePartsBetween(link.toStart, link.toEnd)
         console.log("toCodeParts", toCodeParts)
 
         fromCodeParts.forEach(function(codePart){
             $(codePart.el).css("border", "1px solid green")
+
+            if (codePart.el !== null && codePart.el.nodeName === "#text"){
+                var newEl = $("<span>" + codePart.el.textContent + "</span>")
+                $(codePart.el).replaceWith(newEl)
+                codePart.el = newEl;
+                $(codePart.el).css("border", "1px solid lime")
+            }
+
             $(codePart.el).click(function(){
-                toCodeParts.forEach(function(toCodePart){
-                    document.body.scrollTop = $(toCodePart.el).offset().top
-                })
+                console.log("toCodeParts", toCodeParts, "link", link)
+                var firstToCodePart = toCodeParts[0]
+                // Don't go to el directly because it could be a
+                // text DOM node where .offset won't work
+                var lineEl = $(firstToCodePart.el).parents(".js-file-line")
+
+                document.body.scrollTop = lineEl.offset().top
             })
         })
     })

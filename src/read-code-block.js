@@ -50,11 +50,22 @@ function getCodeFromCodeParts(codeParts){
     return code;
 }
 
+function getCodePartsBetween(codeParts, startPos, endPos){
+    return codeParts.filter(function(codePart){
+        return codePart.end >= startPos
+            &&
+            codePart.start <= endPos
+    })
+}
+
 function readCodeBlock(el){
     var codeParts = getCodeParts(el);
     return {
         codeParts: codeParts,
-        code: getCodeFromCodeParts(codeParts)
+        code: getCodeFromCodeParts(codeParts),
+        getCodePartsBetween: function(startPos, endPos){
+            return getCodePartsBetween(codeParts, startPos, endPos)
+        }
     }
 }
 

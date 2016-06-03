@@ -9,7 +9,10 @@ module.exports = function(code, callback){
         estraverse.traverse(ast, {
             enter: function (node, parent) {
                 if (node.type === "Identifier" && parent.type==="VariableDeclarator") {
-                    identifierPositions.push(node.start)
+                    identifierPositions.push({
+                        start: node.start,
+                        end: node.end
+                    })
                 }
             }
         });
@@ -30,8 +33,8 @@ function getLinksFromPositions(srv, positions, callback){
         return;
     }
 
-    positions.forEach(function(identifierPosition){
-        getLinksTo(identifierPosition, function(links){
+    positions.forEach(function(position){
+        getLinksTo(position, function(links){
             allLinks = allLinks.concat(links)
 
             numberOfPositionsLinksHaveBeenRetrievedFor++
@@ -41,19 +44,19 @@ function getLinksFromPositions(srv, positions, callback){
         })
     })
 
-    function getLinksTo(characterIndex, callback){
+    function getLinksTo(position, callback){
         var doc = {
             query: {
                 type: "refs",
                 file: "test.js",
-                end: characterIndex
+                end: position.end
             }
         }
         srv.request(doc, function(error, response){
             var links = response.refs.map(function(ref){
                 return {
-                    toStart: characterIndex,
-                    toEnd: characterIndex,
+                    toStart: position.start,
+                    toEnd: position.end,
                     fromStart: ref.start,
                     fromEnd: ref.end
                 }
