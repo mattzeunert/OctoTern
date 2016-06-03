@@ -18,6 +18,7 @@
   "homepage": "https://github.com/mattzeunert/OctoTern#readme",
   "dependencies": {
     "estraverse": "^4.2.0",
+    "jquery": "^2.2.4",
     "tern": "^0.18.0"
   },
   "devDependencies": {
