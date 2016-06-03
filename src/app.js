@@ -2,6 +2,7 @@ var $ = require("jquery")
 var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
+console.time("OctoTern")
 var codeBlock = new GithubCodeBlock($(".blob-wrapper").first(0))
 var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
     window.ternLinks = ternLinks
@@ -17,8 +18,6 @@ var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
 
         fromCodeParts.forEach(function(codePart){
             $(codePart.el).css("border", "1px solid green")
-
-            // if (codePart.content === "debugFunctions") debugger;
 
             if (codePart.el !== null && codePart.el.nodeName === "#text"){
                 var newEl = $("<span>" + codePart.el.textContent + "</span>")
@@ -39,6 +38,7 @@ var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
                 document.body.scrollTop = lineEl.offset().top
             })
         })
+        console.timeEnd("OctoTern")
     })
 
     console.log(ternLinks)
