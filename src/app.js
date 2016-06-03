@@ -3,7 +3,7 @@ var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
 $("body").append("<style>" +
-    ".octo-tern-definition { transition: 1s all }" +
+    ".octo-tern-definition { background: red; transition: 1s all }" +
     ".octo-tern-definition-selected { background: yellow; box-shadow: 0px 0px 10px yellow;}" +
     ".octo-tern-link { cursor: pointer } " +
     ".octo-tern-link:hover {text-decoration: underline} " +
