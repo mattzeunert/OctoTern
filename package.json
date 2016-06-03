@@ -19,7 +19,8 @@
   "dependencies": {
     "estraverse": "^4.2.0",
     "jquery": "^2.2.4",
-    "tern": "^0.18.0"
+    "tern": "^0.18.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "json-loader": "^0.5.4",

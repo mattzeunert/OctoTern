@@ -8,13 +8,17 @@ var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
     window.codeBlock = codeBlock
 
     ternLinks.map(function(link){
+        codeBlock.enforceCleanDomSplitBetween(link.fromStart, link.fromEnd)
+        codeBlock.enforceCleanDomSplitBetween(link.toStart, link.toEnd)
+
         var fromCodeParts = codeBlock.getCodePartsBetween(link.fromStart, link.fromEnd)
-        console.log("fromCodeParts", fromCodeParts)
         var toCodeParts = codeBlock.getCodePartsBetween(link.toStart, link.toEnd)
-        console.log("toCodeParts", toCodeParts)
+
 
         fromCodeParts.forEach(function(codePart){
             $(codePart.el).css("border", "1px solid green")
+
+            // if (codePart.content === "debugFunctions") debugger;
 
             if (codePart.el !== null && codePart.el.nodeName === "#text"){
                 var newEl = $("<span>" + codePart.el.textContent + "</span>")
