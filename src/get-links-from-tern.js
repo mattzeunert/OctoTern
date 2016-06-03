@@ -21,7 +21,8 @@ function findIdentifierPositions(srv, ast, scope, callback){
         enter: function (node, parent) {
             if (node.type === "Identifier") {
                 if (parent.type==="VariableDeclarator" ||
-                    parent.type === "FunctionExpression") {
+                    parent.type === "FunctionExpression" ||
+                    parent.type === "FunctionDeclaration") {
                     identifierPositions.push({
                         start: node.start,
                         end: node.end
