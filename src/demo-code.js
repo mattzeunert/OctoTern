@@ -12,3 +12,9 @@ function Classy(){}
 Classy.prototype.hi = "hello"
 var instance = new Classy();
 instance.hi
+
+var b = {
+    test: "hi"
+}
+b.test = "hello"
+b.test = "hiya"

@@ -5,7 +5,7 @@ var getLinksFromTern = require("./get-links-from-tern")
 $("body").append("<style>" +
     ".octo-tern-definition { background: red; transition: 1s all }" +
     ".octo-tern-definition-selected { background: yellow; box-shadow: 0px 0px 10px yellow;}" +
-    ".octo-tern-link { cursor: pointer } " +
+    ".octo-tern-link {background: lime; cursor: pointer } " +
     ".octo-tern-link:hover {text-decoration: underline} " +
 "</style>")
 
@@ -42,7 +42,9 @@ var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
                     }, 2000)
 
                     var heightOfTwoLines = 18 * 2;
-                    document.body.scrollTop = $(firstToCodePart.el).offset().top - heightOfTwoLines
+                    $(document.body).animate({
+                        scrollTop: $(firstToCodePart.el).offset().top - heightOfTwoLines
+                    });
                 })
             })
         }

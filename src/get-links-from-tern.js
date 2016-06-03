@@ -20,24 +20,10 @@ function findIdentifierPositions(srv, ast, scope, callback){
     estraverse.traverse(ast, {
         enter: function (node, parent) {
             if (node.type === "Identifier") {
-                var isPrototypeAssignment = (
-                    parent.type === "MemberExpression" &&
-                    parent.object.property !== undefined &&
-                    parent.object.property.name === "prototype"
-                )
-                var isNewUsefulIdentifier = (
-                    parent.type==="VariableDeclarator" ||
-                    parent.type === "FunctionExpression" ||
-                    parent.type === "FunctionDeclaration" ||
-                    isPrototypeAssignment
-                )
-
-                if (isNewUsefulIdentifier) {
-                    identifierPositions.push({
-                        start: node.start,
-                        end: node.end
-                    })
-                }
+                identifierPositions.push({
+                    start: node.start,
+                    end: node.end
+                })
             }
         }
     });
@@ -82,37 +68,43 @@ function getLinksFromPositions(srv, positions, callback){
     positions.forEach(function(position){
         getLinksTo(position, function(links){
             allLinks = allLinks.concat(links)
+            continuu()
+        })
 
+        function continuu(){
             numberOfPositionsLinksHaveBeenRetrievedFor++
             if (numberOfPositionsLinksHaveBeenRetrievedFor == positions.length){
                 callback(allLinks)
             }
-        })
+        }
     })
+
+    function linkExistsAt(position){
+        return allLinks.some(function(link){
+            return link.fromStart === position.start && link.fromEnd === position.end;
+        })
+    }
 
     function getLinksTo(position, callback){
         var doc = {
             query: {
-                type: "refs",
+                type: "definition",
                 file: "test.js",
                 end: position.end
             }
         }
         srv.request(doc, function(error, response){
-
             var links = [];
-            if (!error){
-                response.refs.forEach(function(ref){
-                    var isDeclaration = position.start === ref.start &&
-                        position.end === ref.end;
-                    links.push({
-                        isDeclaration: isDeclaration,
-                        toStart: position.start,
-                        toEnd: position.end,
-                        fromStart: ref.start,
-                        fromEnd: ref.end
-                    });
-                })
+            if (!error && response.start !== undefined){
+                var isDeclaration = position.start === response.start &&
+                        position.end === response.end;
+                links.push({
+                    isDeclaration: isDeclaration,
+                    toStart: response.start,
+                    toEnd: response.end,
+                    fromStart: position.start,
+                    fromEnd: position.end
+                });
             }
             callback(links)
         })

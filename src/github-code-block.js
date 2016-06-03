@@ -70,6 +70,9 @@ GithubCodeBlock.prototype.enforceCodePartsUseElementNodes = function(codeParts){
     })
 }
 GithubCodeBlock.prototype.enforceCodePartUsesElementNode = function(codePart) {
+    if (codePart.el === null) {
+        return;
+    }
     if (codePart.el.nodeName === "#text"){
         var newEl = $("<span>" + codePart.el.textContent + "</span>")
         // newEl.attr("debug-start", codePart.start)
