@@ -16,14 +16,23 @@ module.exports = function(code, callback){
 }
 
 function findIdentifierPositions(srv, ast, scope, callback){
-    // VARIABLES ONLY
     var identifierPositions = [];
     estraverse.traverse(ast, {
         enter: function (node, parent) {
+            // variable declarations
             if (node.type === "Identifier" && parent.type==="VariableDeclarator") {
                 identifierPositions.push({
                     start: node.start,
                     end: node.end
+                })
+            }
+            if (node.type === "FunctionExpression") {
+                node.params.forEach(function(paramNode){
+                    // these are also Identiers, ... maybe I can use that somehow?
+                    identifierPositions.push({
+                        start: paramNode.start,
+                        end: paramNode.end
+                    })
                 })
             }
         }

@@ -9,7 +9,6 @@ $("body").append("<style>" +
     ".octo-tern-link:hover {text-decoration: underline} " +
 "</style>")
 
-console.time("OctoTern")
 var codeBlock = new GithubCodeBlock($(".blob-wrapper").first(0))
 var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
     window.ternLinks = ternLinks
