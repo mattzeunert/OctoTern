@@ -28,32 +28,6 @@ function findIdentifierPositions(srv, ast, scope, callback){
         }
     });
     callback(identifierPositions)
-
-    // BRUTE FORCE
-    // var code = srv.files[0].text;
-    // var charsFetched = 0;
-    // var identifierPositions = []
-    // for (let i = 0; i < code.length; i++) {
-    //     srv.request({
-    //         query: {
-    //             type: "refs",
-    //             file: "test.js",
-    //             end: i
-    //         }
-    //     }, function(error, response){
-    //         charsFetched++;
-    //         if (response && response.refs.length > 0) {
-    //             identifierPositions.push({
-    //                 start: response.refs[0].start,
-    //                 end: response.refs[0].end
-    //             })
-    //         }
-    //         if (charsFetched === code.length){
-    //             callback(identifierPositions)
-    //         }
-    //     })
-    // }
-
 }
 
 function getLinksFromPositions(srv, positions, callback){
