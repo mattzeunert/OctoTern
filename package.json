@@ -1,0 +1,27 @@
+{
+  "name": "octotern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattzeunert/OctoTern.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattzeunert/OctoTern/issues"
+  },
+  "homepage": "https://github.com/mattzeunert/OctoTern#readme",
+  "dependencies": {
+    "estraverse": "^4.2.0",
+    "tern": "^0.18.0"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.4",
+    "webpack": "^1.13.1"
+  }
+}

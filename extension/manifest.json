@@ -1,0 +1,16 @@
+{
+    "name": "OctoTern",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "author": "Matt Zeunert",
+    "description": "",
+    "content_scripts": [
+        {
+            "matches": [
+                "https://github.com/*",
+                "https://gist.github.com/*"
+            ],
+            "js": ["app.js"]
+        }
+    ]
+}
