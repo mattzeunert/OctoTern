@@ -3,8 +3,8 @@ var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
 $("body").append("<style>" +
-    ".octo-tern-definition { transition: 1s background }" +
-    ".octo-tern-definition-selected { background: yellow}" +
+    ".octo-tern-definition { transition: 1s all }" +
+    ".octo-tern-definition-selected { background: yellow; box-shadow: 0px 0px 10px yellow;}" +
     ".octo-tern-link { cursor: pointer } " +
     ".octo-tern-link:hover {text-decoration: underline} " +
 "</style>")
@@ -40,7 +40,7 @@ var ternLinks = getLinksFromTern(codeBlock.getCode(), function(ternLinks){
                     declarationElements.addClass("octo-tern-definition-selected")
                     setTimeout(function(){
                         declarationElements.removeClass("octo-tern-definition-selected")
-                    }, 1000)
+                    }, 2000)
 
                     var heightOfTwoLines = 18 * 2;
                     document.body.scrollTop = $(firstToCodePart.el).offset().top - heightOfTwoLines
