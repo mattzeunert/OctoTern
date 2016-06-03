@@ -20,9 +20,19 @@ function findIdentifierPositions(srv, ast, scope, callback){
     estraverse.traverse(ast, {
         enter: function (node, parent) {
             if (node.type === "Identifier") {
-                if (parent.type==="VariableDeclarator" ||
+                var isPrototypeAssignment = (
+                    parent.type === "MemberExpression" &&
+                    parent.object.property !== undefined &&
+                    parent.object.property.name === "prototype"
+                )
+                var isNewUsefulIdentifier = (
+                    parent.type==="VariableDeclarator" ||
                     parent.type === "FunctionExpression" ||
-                    parent.type === "FunctionDeclaration") {
+                    parent.type === "FunctionDeclaration" ||
+                    isPrototypeAssignment
+                )
+
+                if (isNewUsefulIdentifier) {
                     identifierPositions.push({
                         start: node.start,
                         end: node.end
