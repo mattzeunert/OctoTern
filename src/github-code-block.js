@@ -18,6 +18,7 @@ GithubCodeBlock.prototype.enforceCleanDomSplitBetween = function(startPos, endPo
 }
 GithubCodeBlock.prototype.enforceCleanDomSplitAt = function(index){
     var codePart = this.getCodePartAt(index);
+
     if (codePart.start === index){
         return
     }
@@ -28,28 +29,29 @@ GithubCodeBlock.prototype.enforceCleanDomSplitAt = function(index){
     var beforeRangeContent = codePart.content.substr(0, cutIndex)
     var insideRangeContent = codePart.content.substr(cutIndex)
 
-    var beforeEl = $(codePart.el).clone();
+    var beforeEl = codePart.$el.clone();
     setElementText(beforeEl, beforeRangeContent);
 
-    var insideEl = $(codePart.el).clone();
+    var insideEl = codePart.$el.clone();
     setElementText(insideEl, insideRangeContent);
 
-    $(codePart.el).replaceWith([beforeEl, insideEl])
+    codePart.$el.replaceWith([beforeEl, insideEl])
     this.replaceCodePart(codePart, [
         {
             el: beforeEl[0],
+            $el: beforeEl,
             start: codePart.start,
             end: index,
             content: beforeRangeContent
         },
         {
             el: insideEl[0],
+            $el: insideEl,
             start: index,
             end: codePart.end,
             content: insideRangeContent
         }
     ]);
-
 }
 GithubCodeBlock.prototype.getCodePartAt = function(index){
     var firstItemIndex = _.sortedIndex(this._sortedCodeParts, index, function(objOrIndex){
@@ -83,8 +85,9 @@ GithubCodeBlock.prototype.enforceCodePartUsesElementNode = function(codePart) {
         var newEl = $("<span>" + codePart.el.textContent + "</span>")
         // newEl.attr("debug-start", codePart.start)
         // newEl.attr("debug-end", codePart.end)
-        $(codePart.el).replaceWith(newEl)
+        codePart.$el.replaceWith(newEl)
         codePart.el = newEl[0];
+        codePart.$el = newEl;
     }
 }
 GithubCodeBlock.prototype.replaceCodePart = function(codePartToReplace, replacements){
@@ -126,6 +129,7 @@ function getCodeParts(containerEl){
 
         codeParts.push({
             el: null,
+            $el: null,
             lineElement: lineElement,
             content: "\n"
         })
@@ -141,6 +145,7 @@ function getCodeParts(containerEl){
                     if (contentText !== "") {
                         codeParts.push({
                             el: contentEl[0],
+                            $el: contentEl,
                             lineElement: lineElement,
                             content: contentText
                         })
