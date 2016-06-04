@@ -29,24 +29,24 @@ GithubCodeBlock.prototype.enforceCleanDomSplitAt = function(index){
     var beforeRangeContent = codePart.content.substr(0, cutIndex)
     var insideRangeContent = codePart.content.substr(cutIndex)
 
-    var beforeEl = codePart.$el.clone();
+    var beforeEl = codePart.el.cloneNode(true)
     setElementText(beforeEl, beforeRangeContent);
 
-    var insideEl = codePart.$el.clone();
+    var insideEl = codePart.el.cloneNode(true)
     setElementText(insideEl, insideRangeContent);
 
     codePart.$el.replaceWith([beforeEl, insideEl])
     this.replaceCodePart(codePart, [
         {
-            el: beforeEl[0],
-            $el: beforeEl,
+            el: beforeEl,
+            $el: $(beforeEl),
             start: codePart.start,
             end: index,
             content: beforeRangeContent
         },
         {
-            el: insideEl[0],
-            $el: insideEl,
+            el: insideEl,
+            $el: $(insideEl),
             start: index,
             end: codePart.end,
             content: insideRangeContent
