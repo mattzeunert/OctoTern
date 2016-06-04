@@ -2,7 +2,7 @@ var $ = require("jquery")
 var gitHubInjection = require("github-injection")
 var processCodeOnPage = require("./process-code-on-page")
 
-window.DEBUG = true;
+window.DEBUG = false;
 init()
 
 gitHubInjection(window, function(err) {
