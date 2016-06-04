@@ -2,7 +2,7 @@ var $ = require("jquery")
 var GithubCodeBlock = require("./github-code-block")
 var getLinksFromTern = require("./get-links-from-tern")
 
-const DEBUG = true;
+const DEBUG = false;
 
 init()
 
@@ -24,8 +24,16 @@ function processCodeOnPage(){
     var codeBlock = new GithubCodeBlock($(".blob-wrapper").first(0))
     timeEnd("OctoTern Init GithubCodeBlock")
 
+    var code = codeBlock.getCode();
+    if (code.length > 100000) {
+        // Would be cool to speed it up or use
+        // webworker for tern requests
+        console.log("Not running OctoTern as processing code could freeze the page for a bit")
+        return
+    }
+
     time("OctoTern getLinksFromTern")
-    getLinksFromTern(codeBlock.getCode(), function(links){
+    getLinksFromTern(code, function(links){
         timeEnd("OctoTern getLinksFromTern")
         setTimeout(function(){
             processTernLinks(links, codeBlock)
@@ -57,7 +65,7 @@ function processTernLinks(ternLinks, codeBlock){
             $linkElements.addClass("octo-tern-link")
 
             $linkElements.click(function(){
-                console.log("toCodeParts", toCodeParts, "link", link)
+                // console.log("toCodeParts", toCodeParts, "link", link)
 
                 $declarationElements.addClass("octo-tern-definition-selected")
                 setTimeout(function(){
