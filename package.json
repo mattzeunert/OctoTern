@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "json-loader": "^0.5.4",
+    "string-replace-webpack-plugin": "0.0.3",
     "webpack": "^1.13.1"
   }
 }
