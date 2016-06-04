@@ -40,8 +40,10 @@ function getLinksFromPositions(srv, positions, callback){
     }
 
     positions.forEach(function processIdentifierPosition(position){
-        getLinksTo(position, function storeRetrievedLinks(links){
-            allLinks = allLinks.concat(links)
+        getDefinitionOf(position, function storeDefinition(definition){
+            if (definition !== null) {
+                allLinks.push(definition);
+            }
 
             numberOfPositionsLinksHaveBeenRetrievedFor++
             if (numberOfPositionsLinksHaveBeenRetrievedFor == positions.length){
@@ -50,7 +52,7 @@ function getLinksFromPositions(srv, positions, callback){
         })
     })
 
-    function getLinksTo(position, callback){
+    function getDefinitionOf(position, callback){
         var doc = {
             query: {
                 type: "definition",
@@ -59,19 +61,19 @@ function getLinksFromPositions(srv, positions, callback){
             }
         }
         srv.request(doc, function onTernRequestResponse(error, response){
-            var links = [];
             if (!error && response.start !== undefined){
                 var isDeclaration = position.start === response.start &&
                         position.end === response.end;
-                links.push({
+                callback({
                     isDeclaration: isDeclaration,
                     toStart: response.start,
                     toEnd: response.end,
                     fromStart: position.start,
                     fromEnd: position.end
-                });
+                })
+            } else {
+                callback(null)
             }
-            callback(links)
         })
     }
 }

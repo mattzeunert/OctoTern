@@ -25,7 +25,7 @@ function processCodeOnPage(){
     timeEnd("OctoTern Init GithubCodeBlock")
 
     time("OctoTern getLinksFromTern")
-    var ternLinks = getLinksFromTern(codeBlock.getCode(), function(links){
+    getLinksFromTern(codeBlock.getCode(), function(links){
         timeEnd("OctoTern getLinksFromTern")
         setTimeout(function(){
             processTernLinks(links, codeBlock)
