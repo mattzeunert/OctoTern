@@ -55,7 +55,6 @@ function processTernLinks(ternLinks, codeBlock){
             var $linkElements = $(fromCodeParts.map((codePart) => codePart.el));
 
             $linkElements.addClass("octo-tern-link")
-            $linkElements.data("$declarationElements", $declarationElements)
 
             $linkElements.click(function(){
                 console.log("toCodeParts", toCodeParts, "link", link)
