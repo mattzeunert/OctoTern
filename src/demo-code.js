@@ -1,3 +1,4 @@
+// This file contains some examples for testing the extension. 
 var a;
 a = 5;
 

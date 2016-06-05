@@ -51,6 +51,13 @@ function processTernLinks(ternLinks, codeBlock){
 
             $linkElements.addClass("octo-tern-link")
 
+            $linkElements.mouseenter(function(){
+                $declarationElements.addClass("octo-tern-definintion-hover")
+            })
+            $linkElements.mouseleave(function(){
+                $declarationElements.removeClass("octo-tern-definintion-hover")
+            })
+
             $linkElements.click(function(){
                 // console.log("toCodeParts", toCodeParts, "link", link)
 
