@@ -57,6 +57,8 @@ function makeIdentifierInteractive(identifierPosition, codeBlock, serverWrapper)
             })
         })
         identifierCodePart.$el.click(function(){
+            // Yes, we're probably making this request twice and we already have the data from
+            // mouseenter. But it seems fast enough.
             makeTernRequest(identifierCodePart, serverWrapper, codeBlock, function(response){
                 if (!response) { return }
                 response.definitionElements.addClass("octo-tern-definition-selected")
