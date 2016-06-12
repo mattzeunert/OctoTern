@@ -67,7 +67,7 @@ function processTernLinks(ternLinks, codeBlock){
                 }, 2000)
 
                 var heightOfTwoLines = 18 * 2;
-                $(document.body).animate({
+                $('html,body').animate({
                     scrollTop: $declarationElements.first().offset().top - heightOfTwoLines
                 });
             })
