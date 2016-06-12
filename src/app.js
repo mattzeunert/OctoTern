@@ -2,7 +2,7 @@ var $ = require("jquery")
 var gitHubInjection = require("github-injection")
 var processCodeOnPage = require("./process-code-on-page")
 
-window.DEBUG = false;
+window.DEBUG = true;
 init()
 
 gitHubInjection(window, function(err) {
@@ -25,10 +25,10 @@ function currentPageIsJavaScriptFilePage(){
 
 function init(){
     $("body").append("<style>" +
-        ".octo-tern-definition { " + (window.DEBUG ? "background: red;" : "") + " transition: 1s all }" +
+        ".octo-tern-definition {  transition: 1s all }" +
         ".octo-tern-definition-selected { background: orange; box-shadow: 0px 0px 10px orange;}" +
         ".octo-tern-definition-hover { background: orange }" +
-        ".octo-tern-link {" + (window.DEBUG ? "background: lime;" : "") + "cursor: pointer } " +
+        ".octo-tern-link { cursor: pointer } " +
         ".octo-tern-link:hover {text-decoration: underline} " +
         ".octo-tern-reference-hover {background: lightblue}" +
     "</style>")
