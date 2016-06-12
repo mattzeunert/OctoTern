@@ -64,8 +64,14 @@ function makeIdentifierInteractive(identifierPosition, codeBlock, serverWrapper)
                     response.definitionElements.removeClass("octo-tern-definition-selected")
                 }, 2000)
 
+                var lineNumberElement = identifierCodePart.$el.parents("tr").find(".js-line-number");
+                var clickedLineNumber = lineNumberElement.data("lineNumber")
+                // Use pushState instead of location.hash, because location.hash triggers
+                // the Github scroll to the clicked line.
+                history.pushState({}, clickedLineNumber, "#" + "L" + clickedLineNumber);
+
                 var heightOfTwoLines = 18 * 2;
-                $('html,body').animate({
+                $('html,body').off().animate({
                     scrollTop: response.definitionElements.first().offset().top - heightOfTwoLines
                 });
             })
