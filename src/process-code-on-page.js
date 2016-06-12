@@ -20,13 +20,65 @@ function processCodeOnPage(){
     }
 
     time("OctoTern getLinksFromTern")
-    getLinksFromTern(code, function(links){
-        timeEnd("OctoTern getLinksFromTern")
-        setTimeout(function(){
-            processTernLinks(links, codeBlock)
-            timeEnd("OctoTern")
-            // console.profileEnd()
+    getLinksFromTern.getIdentifiers(code, function(identifierPositions){
+
+        identifierPositions.forEach(function(identifierPosition){
+            codeBlock.enforceCleanDomSplitBetween(identifierPosition.start, identifierPosition.end);
         })
+
+        identifierPositions.forEach(function(identifierPosition){
+            var identifierCodeParts = codeBlock.getCodePartsBetween(identifierPosition.start, identifierPosition.end);
+            codeBlock.enforceCodePartsUseElementNodes(identifierCodeParts)
+            identifierCodeParts.forEach(function(identifierCodePart){
+                identifierCodePart.$el.addClass("octo-tern-definition")
+                identifierCodePart.$el.on("mouseenter", function(){
+                    getLinksFromTern.getLinks(code, identifierCodePart.start, identifierCodePart.end, function(response){
+                        if (!response.definition) {return}
+                        var definitionCodeParts = codeBlock.getCodePartsBetween(response.definition.start, response.definition.end);
+                        var definitionElements = $(definitionCodeParts.map((codePart) => codePart.el));
+
+                        definitionElements.addClass("octo-tern-definition-hover")
+
+                        var referenceCodeParts = [];
+                        response.nonDefinitionReferences.forEach(function(ref){
+                            referenceCodeParts = referenceCodeParts.concat(codeBlock.getCodePartsBetween(ref.start, ref.end))
+                        })
+                        var referenceElements = $(referenceCodeParts.map((codePart) => codePart.el));
+
+                        referenceElements.addClass("octo-tern-reference-hover")
+                    })
+                })
+                identifierCodePart.$el.click(function(){
+
+                    getLinksFromTern.getLinks(code, identifierCodePart.start, identifierCodePart.end, function(response){
+                        if (!response.definition) {return}
+                        var definitionCodeParts = codeBlock.getCodePartsBetween(response.definition.start, response.definition.end);
+                        var definitionElements = $(definitionCodeParts.map((codePart) => codePart.el));
+
+                        definitionElements.addClass("octo-tern-definition-selected")
+                        setTimeout(function(){
+                            definitionElements.removeClass("octo-tern-definition-selected")
+                        }, 2000)
+
+                        var heightOfTwoLines = 18 * 2;
+                        $('html,body').animate({
+                            scrollTop: definitionElements.first().offset().top - heightOfTwoLines
+                        });
+                    });
+                })
+                identifierCodePart.$el.on("mouseleave", function(){
+                    $(".octo-tern-definition-hover").removeClass("octo-tern-definition-hover")
+                    $(".octo-tern-reference-hover").removeClass("octo-tern-reference-hover")
+                })
+            })
+        })
+
+        // timeEnd("OctoTern getLinksFromTern")
+        // setTimeout(function(){
+        //     processTernLinks(links, codeBlock)
+        //     timeEnd("OctoTern")
+        //     // console.profileEnd()
+        // })
     });
 }
 

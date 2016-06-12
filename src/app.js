@@ -26,9 +26,10 @@ function currentPageIsJavaScriptFilePage(){
 function init(){
     $("body").append("<style>" +
         ".octo-tern-definition { " + (window.DEBUG ? "background: red;" : "") + " transition: 1s all }" +
-        ".octo-tern-definition-selected { background: yellow; box-shadow: 0px 0px 10px yellow;}" +
-        ".octo-tern-definintion-hover { background: yellow }" + 
+        ".octo-tern-definition-selected { background: orange; box-shadow: 0px 0px 10px orange;}" +
+        ".octo-tern-definition-hover { background: orange }" +
         ".octo-tern-link {" + (window.DEBUG ? "background: lime;" : "") + "cursor: pointer } " +
         ".octo-tern-link:hover {text-decoration: underline} " +
+        ".octo-tern-reference-hover {background: lightblue}" +
     "</style>")
 }

@@ -2,23 +2,75 @@
 var tern = require("tern")
 var estraverse = require("estraverse")
 
-module.exports = function(code, callback){
-    var srv = new tern.Server({});
-    var identifierPositions = []
-    srv.on("postInfer", function(ast, scope){
-        findIdentifierPositions(srv, ast, scope, function handleIdentifierPositions(identifierPositions){
-            getLinksFromPositions(srv, identifierPositions, callback)
-        });
-    })
+module.exports = {
+    getIdentifiers: function(code, callback){
+        var srv = new tern.Server({});
+        var identifierPositions = []
+        srv.on("postInfer", function(ast, scope){
+            findIdentifierPositions(srv, ast, scope, function handleIdentifierPositions(identifierPositions){
+                callback(identifierPositions)
+                // getLinksFromPositions(srv, identifierPositions, callback)
+            });
+        })
 
-    srv.addFile("test.js", code)
-    srv.flush(function(){});
+        srv.addFile("test.js", code)
+        srv.flush(function(){});
+    },
+    getLinks: function(code, start, end, callback){
+        var srv = new tern.Server({});
+
+        srv.addFile("test.js", code)
+        srv.flush(function(){});
+
+        var definitionQuery = {
+            query: {
+                type: "definition",
+                file: "test.js",
+                end: end
+            }
+        }
+        var refQuery = {
+            query: {
+                type: "refs",
+                file: "test.js",
+                end: end
+            }
+        }
+        srv.request(definitionQuery, function onTernDefinitionRequestResponse(error, definitionResponse){
+            srv.request(refQuery, function onTernRequestRequestResponse(error, refResponse){
+                handleTernData(definitionResponse, refResponse);
+            })
+        })
+
+        function handleTernData(definitionResponse, refResponse){
+            var definition = null;
+            var isDefinition = false;
+            var nonDefinitionReferences = null
+            if (definitionResponse && refResponse && definitionResponse.start !== undefined){
+                definition = {
+                    start: definitionResponse.start,
+                    end: definitionResponse.end
+                }
+
+                nonDefinitionReferences = refResponse.refs.filter(function(ref){
+                    var isDefinition = ref.start === definition.start && ref.end === definition.end;
+                    return !isDefinition;
+                })
+            }
+
+            callback({
+                definition: definition,
+                nonDefinitionReferences: nonDefinitionReferences
+            })
+        }
+    }
 }
 
 function findIdentifierPositions(srv, ast, scope, callback){
     var identifierPositions = [];
     estraverse.traverse(ast, {
         enter: function (node, parent) {
+            // console.log(node.type, node.start, node.end)
             if (node.type === "Identifier") {
                 identifierPositions.push({
                     start: node.start,
