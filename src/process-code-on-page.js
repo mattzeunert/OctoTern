@@ -11,9 +11,12 @@ function processCodeOnPage(){
     timeEnd("OctoTern Init GithubCodeBlock")
 
     var code = codeBlock.getCode();
-    if (code.length > 60000) {
+    log("Code length in characters: " + code.length)
+    if (code.length > 200000) {
         // Would be cool to speed it up or use
         // webworker for tern requests
+
+        // as of 12 June 2016 200k characters will freeze for around 4s on my machine (will depend a lot on the code being processed)
         console.log("Not running OctoTern as processing code could freeze the page for a bit")
         return
     }
@@ -109,6 +112,10 @@ function time(label){
 function timeEnd(label){
     if (!window.DEBUG) return
     console.timeEnd(label)
+}
+function log(){
+    if (!window.DEBUG) return
+    console.log.apply(console, arguments)
 }
 
 module.exports = processCodeOnPage
