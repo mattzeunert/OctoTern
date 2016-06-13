@@ -44,6 +44,11 @@ function processCodeOnPage(){
     };
 }
 
+function getLineNumberFromCodePart(codePart){
+    var lineNumberElement = codePart.$el.parents("tr").find(".js-line-number");
+    return lineNumberElement.data("lineNumber")
+}
+
 function makeIdentifierInteractive(identifierPosition, codeBlock, serverWrapper){
     var identifierCodeParts = codeBlock.getCodePartsBetween(identifierPosition.start, identifierPosition.end);
     codeBlock.enforceCodePartsUseElementNodes(identifierCodeParts)
@@ -66,11 +71,17 @@ function makeIdentifierInteractive(identifierPosition, codeBlock, serverWrapper)
                     response.definitionElements.removeClass("octo-tern-definition-selected")
                 }, 2000)
 
-                var lineNumberElement = identifierCodePart.$el.parents("tr").find(".js-line-number");
-                var clickedLineNumber = lineNumberElement.data("lineNumber")
+                var clickedLineNumber = getLineNumberFromCodePart(identifierCodePart);
+                var definitionLineNumber = getLineNumberFromCodePart(response.definitionCodeParts[0]);
+
+                var clickedLineHash = "#L" + clickedLineNumber;
+                var definitionLineHash = "#L" + definitionLineNumber;
                 // Use pushState instead of location.hash, because location.hash triggers
                 // the Github scroll to the clicked line.
-                history.pushState({}, clickedLineNumber, "#" + "L" + clickedLineNumber);
+                if (location.hash !== clickedLineHash) {
+                    history.pushState({}, clickedLineNumber, clickedLineHash);
+                }
+                history.pushState({}, definitionLineNumber, definitionLineHash);
 
                 var heightOfTwoLines = 18 * 2;
                 $('html,body').off().animate({
