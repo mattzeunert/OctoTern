@@ -4,7 +4,8 @@ Chrome Extension that lets you jump to a variable's definition when viewing Java
 
 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/octotern/fhgodjaafcddpfdpfmoimnjpelemhnmm)
 
-![Screenshot of jumping to variable](https://cloud.githubusercontent.com/assets/1303660/15799873/28e9b324-2a63-11e6-8f8b-a52d026e202c.png)
+![Video of jumping to variable](https://cloud.githubusercontent.com/assets/1303660/16002448/9818486c-314f-11e6-9b0d-3c365e8d9966.gif)
+
 
 ## Development
 
