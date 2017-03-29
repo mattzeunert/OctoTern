@@ -1,6 +1,6 @@
 # OctoTern
 
-Chrome Extension that lets you jump to a variable's definition when viewing JavaScript code on Github. Also highlights all variable refernces. Built using [Tern](http://ternjs.net/).
+Chrome Extension that lets you jump to a variable's definition when viewing JavaScript code on Github. Also highlights all variable references. Built using [Tern](http://ternjs.net/).
 
 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/octotern/fhgodjaafcddpfdpfmoimnjpelemhnmm)
 
