@@ -1,14 +1,11 @@
-var $ = require("jquery")
 var gitHubInjection = require("github-injection")
 var processCodeOnPage = require("./process-code-on-page")
 
 window.DEBUG = false;
-init()
+window.$ = $;
+init();
 
-gitHubInjection(window, function(err) {
-  if (err) {
-    return console.error(err);
-  }
+gitHubInjection(() => {
   if (!currentPageIsJavaScriptFilePage()){
       return;
   }
