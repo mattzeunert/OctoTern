@@ -1,8 +1,6 @@
 var GithubCodeBlock = require("./github-code-block")
 var TernServerWrapper = require("./tern-server-wrapper")
 
-window.$ = $;
-
 function processCodeOnPage(){
     time("OctoTern Initialization")
 
