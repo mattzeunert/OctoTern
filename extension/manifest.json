@@ -1,6 +1,6 @@
 {
     "name": "OctoTern",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "manifest_version": 2,
     "author": "Matt Zeunert",
     "description": "",
@@ -10,7 +10,10 @@
                 "https://github.com/*",
                 "https://gist.github.com/*"
             ],
-            "js": ["app.js"]
+            "js": [
+                "jquery-3.min.js",
+                "app.js"
+            ]
         }
     ],
     "icons": {
