@@ -13,6 +13,9 @@ module.exports = {
     plugins: [
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ReplaceBundleStringPlugin([{
+            // Tern uses an older version of Acorn, which embeds an invalid UTF-8 character
+            // Chrome doesn't want to load the content script because of that
+            // So we replace the character literal with a fromCharCode call
             partten: /\"\\uffff\"/g,
             replacement: function () {
                 return "String.fromCharCode(65535)";
