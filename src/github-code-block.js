@@ -1,5 +1,4 @@
-var $ = require("jquery")
-var _ = require("underscore")
+var _ = require("underscore");
 
 function GithubCodeBlock(el){
     this.el = el

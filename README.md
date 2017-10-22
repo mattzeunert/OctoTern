@@ -9,4 +9,5 @@ Chrome Extension that lets you jump to a variable's definition when viewing Java
 
 ## Development
 
-Run `webpack --watch` to compile the code. Then load the extension folder into Chrome as an unpacked extension.
+Run `npm run watch` to compile for dev and watch for updates. Then load the extension folder into Chrome as an unpacked extension.
+Run `npm run build` to compile for prod.

@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "build": "NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",
@@ -18,14 +20,14 @@
   "homepage": "https://github.com/mattzeunert/OctoTern#readme",
   "dependencies": {
     "estraverse": "^4.2.0",
-    "github-injection": "^0.2.0",
-    "jquery": "^2.2.4",
-    "tern": "^0.18.0",
+    "github-injection": "^1.0.1",
+    "tern": "^0.21.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "json-loader": "^0.5.4",
-    "string-replace-webpack-plugin": "0.0.3",
-    "webpack": "^1.13.1"
+    "replace-bundle-webpack-plugin": "^1.0.0",
+    "uglifyjs-webpack-plugin": "^1.0.0-beta.3",
+    "webpack": "^3.8.1",
+    "webpack-encoding-plugin": "^0.2.1"
   }
 }

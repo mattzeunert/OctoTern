@@ -1,7 +1,5 @@
-var $ = require("jquery")
 var GithubCodeBlock = require("./github-code-block")
 var TernServerWrapper = require("./tern-server-wrapper")
-
 
 function processCodeOnPage(){
     time("OctoTern Initialization")
@@ -83,7 +81,8 @@ function makeIdentifierInteractive(identifierPosition, codeBlock, serverWrapper)
                 }
                 history.pushState({}, definitionLineNumber, definitionLineHash);
 
-                var heightOfTwoLines = 18 * 2;
+                // 43 is height of sticky navigation
+                var heightOfTwoLines = 18 * 2 + 43;
                 $('html,body').off().animate({
                     scrollTop: response.definitionElements.first().offset().top - heightOfTwoLines
                 });
